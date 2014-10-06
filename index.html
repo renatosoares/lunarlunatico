@@ -12,12 +12,13 @@
 </head>
 <body>
 	<script type="text/javascript">
-		var game = new Phaser.Game(900, 700, Phaser.AUTO, 'phaser-example', {preload: preload, create: create, update: update});
+		var game = new Phaser.Game(900, 660, Phaser.CANVAS, 'phaser-example', {preload: preload, create: create, update: update});
 		
 		function preload() {
 			game.load.spritesheet('cosmonauta', 'cosmonauta.png', 32, 48);
 			game.load.tilemap('cenario', 'cenario.json', null, Phaser.Tilemap.TILED_JSON);
 			game.load.image('blocos', 'blocos.png');
+			game.load.spritesheet('moeda', 'moeda.png', 32, 32);
 		}
 
 		
@@ -25,13 +26,14 @@
 		var camada;
 		var controle;
 		var jogador;
+		var dinheiro;
 
 		
 		function create() {
 
 			game.physics.startSystem(Phaser.Physics.ARCADE);
 
-			//######## >>> cenário do jogo
+			//@@@@@@@@ >>> cenário do jogo
 			game.stage.backgroundColor = '#3A9';
 
 			mapa = game.add.tilemap('cenario');
@@ -43,7 +45,7 @@
 
 			
 
-			//######## <<< cenário do jogo
+			//@@@@@@@@ <<< cenário do jogo
 
 			//####### >>> jogador
 			jogador = game.add.sprite(32, game.world.height - 550, 'cosmonauta');
@@ -54,10 +56,30 @@
 			jogador.body.gravity.y = 300;
 			jogador.body.collideWorldBounds = true;
 
-			jogador.animations.add('left', [0, 1, 2, 3], true);
-			jogador.animations.add('right', [5, 6, 7, 8], true);
+			jogador.animations.add('left', [0, 1, 2, 3], 10, true);
+			jogador.animations.add('right', [5, 6, 7, 8], 10, true);
+
+			game.camera.follow(jogador);
 
 			//####### <<< jogador
+
+			//******* >>> objetos
+			dinheiro = game.add.group();
+			dinheiro.enableBody = true; // parei aqui 16:49 06-10 *problemas: moedas não aparecem
+
+			mapa.createFromObjects('moedinhas', 60, 'moeda', 0, true, false, dinheiro);
+
+			dinheiro.callAll('animations.add', 'animations', 'spin', [0, 1, 2, 3, 4, 5], 10, true);
+			dinheiro.callAll('animations.play', 'animations', 'spin');
+
+			//****** <<< objetos
+
+
+			//####### >>> controle do jogo
+
+			controle = game.input.keyboard.createCursorKeys();
+
+			//####### <<< controle do jogo
 
 
 
@@ -65,7 +87,43 @@
 
 
 		function update() {
+
+			game.physics.arcade.overlap(jogador, dinheiro, coletaDindin, null, this);
+
+			game.physics.arcade.collide(jogador, camada);
+
+			jogador.body.velocity.x = 0;
+
+			//####### >>> controle do jogo
+
+			if (controle.left.isDown)
+			{
+				jogador.body.velocity.x = -150;
+				jogador.animations.play('left');
+			}
+			else if (controle.right.isDown)
+			{
+				jogador.body.velocity.x = 150;
+				jogador.animations.play('right');
+			}
+			else
+			{
+				jogador.animations.stop();
+				jogador.frame = 4;
+			}
+
+			if (controle.up.isDown && jogador.body.onFloor())
+			{
+				jogador.body.velocity.y = -350;
+			}
+
+			//####### <<< controle do jogo
+
 			
+		}
+
+		function coletaDindin (jogador, dinheiro) {
+			dinheiro.kill();
 		}
 		
 	</script>
