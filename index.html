@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<script src="phaser.min.js"></script>
+	<style type="text/css">
+		canvas {
+			margin: 0 auto;
+		}
+	</style>
+	<meta charset="UTF-8">
+	<title>Lunar Lunatico</title>
+</head>
+<body>
+	<script type="text/javascript">
+		var game = new Phase.Game(900, 700, Phaser.AUTO, 'phaser-example', {preload: preload, create: create, update: update});
+		
+		function preload () {
+			game.load.sprintsheet('cosmonauta', 'cosmonauta.png', 32, 48);
+			game.load.tilemap('cenario', 'cenario.json', null, Phaser.Tilemap.TILED_JSON);
+			game.load.image('blocos', 'blocos.png');
+		}
+
+		
+		var mapa;
+		var camada;
+		var controle;
+		var jogador;
+
+		
+		function create () {
+			mapa = game.add.tilemap('cenario');
+		}
+
+
+		function update () {
+			
+		}
+		
+	</script>
+	
+</body>
+</html>
