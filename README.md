@@ -1,4 +1,4 @@
-# Lunar Lunatico <h1> tag
-## Um jogo de sobrevivência <h2> tag
+# Lunar Lunatico <h1>
+## Um jogo de sobrevivência <h4> 
 
 Uma breve descrição... 
