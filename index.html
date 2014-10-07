@@ -19,6 +19,8 @@
 			game.load.tilemap('cenario', 'cenario.json', null, Phaser.Tilemap.TILED_JSON);
 			game.load.image('blocos', 'blocos.png');
 			game.load.spritesheet('moeda', 'moeda.png', 32, 32);
+
+			 game.load.bitmapFont('carrier_command', 'carrier_command.png', 'carrier_command.xml');
 		}
 
 		
@@ -27,6 +29,11 @@
 		var controle;
 		var jogador;
 		var dinheiro;
+		var pontos = 0;
+		var pontosTexto;
+		
+		var retropontosTexto;
+		var bmpText;
 
 		
 		function create() {
@@ -65,9 +72,9 @@
 
 			//******* >>> objetos
 			dinheiro = game.add.group();
-			dinheiro.enableBody = true; // parei aqui 16:49 06-10 *problemas: moedas não aparecem
+			dinheiro.enableBody = true; 
 
-			mapa.createFromObjects('moedinhas', 60, 'moeda', 0, true, false, dinheiro);
+			mapa.createFromObjects('moedinhas', 45, 'moeda', 0, true, false, dinheiro);
 
 			dinheiro.callAll('animations.add', 'animations', 'spin', [0, 1, 2, 3, 4, 5], 10, true);
 			dinheiro.callAll('animations.play', 'animations', 'spin');
@@ -81,12 +88,42 @@
 
 			//####### <<< controle do jogo
 
+			//$$$$$$ <<< texto de informação
+
+			//escreve texto com fonte do pc
+			//pontosTexto = game.add.text(0 , 0, 'Pontos: 0', {fontSize: '32', fill: '#000'});
+
+			
+
+    		//retropontosTexto = game.add.retroFont('knightHawks', 31, 25, Phaser.RetroFont.TEXT_SET6, 10, 1, 1);
+
+    		//desenha texto bmp na tela
+    		bmpText = game.add.bitmapText(0, 0, 'carrier_command','Pontos: 0',22);
+
+    		//fixa o texto a câmera
+    		bmpText.fixedToCamera = true;
+    		bmpText.cameraOffset.setTo(16, 16);
+
+    			//bmpText.inputEnabled = true;
+
+  				//  bmpText.input.enableDrag();
+
+
+
+    		
+
+			//$$$$$$ <<< texto de informação
+
+
+
+
 
 
 		}
 
 
 		function update() {
+
 
 			game.physics.arcade.overlap(jogador, dinheiro, coletaDindin, null, this);
 
@@ -105,6 +142,7 @@
 			{
 				jogador.body.velocity.x = 150;
 				jogador.animations.play('right');
+				
 			}
 			else
 			{
@@ -124,6 +162,11 @@
 
 		function coletaDindin (jogador, dinheiro) {
 			dinheiro.kill();
+
+			pontos += 10;
+			//pontosTexto.text = 'Pontos ' + pontos;
+			bmpText.text = 'Pontos: ' + pontos;
+			
 		}
 		
 	</script>
